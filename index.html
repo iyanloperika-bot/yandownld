@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikSnap HD - TikTok Downloader Tanpa Watermark</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: rgba(18, 24, 38, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(0, 242, 254, 0.35);
+      --primary: #00f2fe;
+      --primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      --accent-pink: #fe2c55;
+      --accent-green: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --shadow-lg: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .glow-bg {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-1 {
+      width: 420px;
+      height: 420px;
+      background: rgba(0, 242, 254, 0.15);
+      top: -80px;
+      left: -80px;
+    }
+    .glow-2 {
+      width: 450px;
+      height: 450px;
+      background: rgba(254, 44, 85, 0.12);
+      top: 35%;
+      right: -120px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      background: rgba(9, 13, 22, 0.85);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .logo-icon {
+      font-size: 1.4rem;
+    }
+    .highlight {
+      color: var(--primary);
+    }
+    .badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: rgba(0, 242, 254, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(0, 242, 254, 0.35);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      margin-left: 6px;
+    }
+
+    .hero-section {
+      padding: 40px 0 60px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .hero-title {
+      font-size: 2.3rem;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.8px;
+      margin-bottom: 14px;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #00f2fe 0%, #fe2c55 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+    .hero-subtitle b {
+      color: #38bdf8;
+    }
+
+    .download-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      padding: 10px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: var(--transition);
+    }
+    .download-card:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.25);
+    }
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.45);
+      border-radius: var(--radius-md);
+      padding: 6px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .input-icon {
+      font-size: 1.15rem;
+      margin-right: 10px;
+      opacity: 0.7;
+    }
+    .input-wrapper input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 0.95rem;
+      padding: 10px 0;
+    }
+    .input-wrapper input::placeholder {
+      color: #64748b;
+    }
+    .btn-paste, .btn-clear {
+      background: rgba(255, 255, 255, 0.09);
+      border: none;
+      color: var(--text-main);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-paste:hover, .btn-clear:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+    .btn-clear {
+      padding: 7px 11px;
+      margin-left: 6px;
+      color: var(--text-muted);
+    }
+
+    .btn-primary {
+      background: var(--primary-gradient);
+      color: #051329;
+      border: none;
+      padding: 15px 24px;
+      border-radius: var(--radius-md);
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition);
+      box-shadow: 0 8px 20px rgba(0, 242, 254, 0.3);
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0, 0, 0, 0.2);
+      border-top-color: #051329;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .helper-text {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-top: 15px;
+    }
+
+    .alert-box.error {
+      max-width: 680px;
+      margin: 18px auto 0;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+
+    .download-progress-bar {
+      max-width: 680px;
+      margin: 15px auto 0;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      text-align: left;
+    }
+
+    .result-box {
+      max-width: 740px;
+      margin: 30px auto 0;
+      text-align: left;
+    }
+    .result-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .creator-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 18px;
+    }
+    .author-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      object-fit: cover;
+    }
+    .author-info {
+      flex: 1;
+    }
+    .author-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .author-handle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .stats-pills {
+      display: flex;
+      gap: 8px;
+    }
+    .stat-pill {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .media-body {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 20px;
+    }
+    .preview-area {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      height: 270px;
+      background: #000;
+      border: 1px solid var(--border-color);
+    }
+    .media-cover {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hd-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.75);
+      color: var(--primary);
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      border: 1px solid var(--primary);
+    }
+    .duration-badge {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+
+    .actions-area {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .caption-card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-color);
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+    }
+    .caption-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .caption-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .btn-copy-sm {
+      background: rgba(0, 242, 254, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(0, 242, 254, 0.35);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn-copy-sm:hover {
+      background: rgba(0, 242, 254, 0.28);
+    }
+    .caption-content {
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      line-height: 1.5;
+      word-break: break-word;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+    .hashtags-list {
+      margin-top: 8px;
+    }
+    .btn-pill-copy {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      color: #38bdf8;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+    }
+
+    .download-buttons-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .btn-download {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-align: left;
+      transition: var(--transition);
+    }
+    .dl-icon {
+      font-size: 1.35rem;
+    }
+    .dl-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .dl-main {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .dl-sub {
+      font-size: 0.74rem;
+      opacity: 0.85;
+    }
+
+    .btn-glow-green {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+    .btn-glow-green:active {
+      transform: scale(0.98);
+    }
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-color);
+      color: var(--text-main);
+    }
+    .btn-music {
+      background: rgba(254, 44, 85, 0.15);
+      border: 1px solid rgba(254, 44, 85, 0.35);
+      color: #ff859c;
+    }
+
+    .slides-section {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-color);
+    }
+    .section-title-sm {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+    }
+    .photo-card {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 9/16;
+      background: #000;
+    }
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .photo-card .dl-photo-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 6px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      display: flex;
+      justify-content: center;
+    }
+    .photo-card button {
+      background: var(--primary);
+      border: none;
+      color: #051329;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(16, 185, 129, 0.95);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: var(--radius-full);
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      z-index: 999;
+      animation: toastIn 0.25s ease;
+    }
+    @keyframes toastIn {
+      from { transform: translate(-50%, 15px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 1.85rem; }
+      .media-body { grid-template-columns: 1fr; }
+      .preview-area { height: 230px; max-width: 230px; margin: 0 auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-bg glow-1"></div>
+  <div class="glow-bg glow-2"></div>
+
+  <header class="header">
+    <div class="container header-container">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Tik<span class="highlight">Snap</span></span>
+        <span class="badge">HD Pro</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span> 100% Gratis • Otomatis Download ke HP
+        </div>
+        <h1 class="hero-title">
+          TikTok Downloader <span class="gradient-text">Tanpa Watermark</span>
+        </h1>
+        <p class="hero-subtitle">
+          Sekali klik, video HD langsung <b>terunduh otomatis ke folder Downloads / Galeri HP Anda</b> (anti muter di browser!).
+        </p>
+
+        <!-- Input Box -->
+        <div class="download-card">
+          <div class="input-wrapper">
+            <span class="input-icon">🔗</span>
+            <input 
+              type="text" 
+              id="tiktokUrl" 
+              placeholder="Tempel tautan TikTok di sini (vt.tiktok.com/...)" 
+              autocomplete="off"
+            >
+            <button type="button" id="pasteBtn" class="btn-paste">📋 Tempel</button>
+            <button type="button" id="clearBtn" class="btn-clear" style="display: none;">✕</button>
+          </div>
+          <button type="button" id="submitBtn" class="btn-primary">
+            <span class="btn-text">🚀 Download Sekarang</span>
+            <span class="spinner" style="display: none;"></span>
+          </button>
+        </div>
+
+        <p class="helper-text">
+          ✅ Video HD Tanpa Watermark • Musik MP3 • Slide Foto • Salin Caption & Hashtag
+        </p>
+
+        <!-- Status Progress Download -->
+        <div id="progressAlert" class="download-progress-bar" style="display: none;">
+          <span class="spinner" style="border-top-color: #10b981;"></span>
+          <span id="progressText">Sedang memproses video... Harap tunggu sebentar file akan otomatis tersimpan.</span>
+        </div>
+
+        <!-- Alert Error -->
+        <div id="errorAlert" class="alert-box error" style="display: none;">
+          <span class="alert-icon">⚠️</span>
+          <span id="errorMessage">Terjadi kesalahan.</span>
+        </div>
+
+        <!-- Kartu Hasil -->
+        <div id="resultBox" class="result-box" style="display: none;">
+          <div class="result-card">
+            
+            <div class="creator-header">
+              <img id="authorAvatar" class="author-avatar" src="" alt="Avatar">
+              <div class="author-info">
+                <h3 id="authorNickname" class="author-name">-</h3>
+                <p id="authorUsername" class="author-handle">@-</p>
+              </div>
+              <div class="stats-pills">
+                <span id="viewCount" class="stat-pill">👁️ 0</span>
+                <span id="likeCount" class="stat-pill">❤️ 0</span>
+              </div>
+            </div>
+
+            <div class="media-body">
+              <div class="preview-area">
+                <img id="mediaCover" class="media-cover" src="" alt="Preview">
+                <div class="hd-badge">HD 1080P</div>
+                <div id="durationBadge" class="duration-badge">00:00</div>
+              </div>
+
+              <div class="actions-area">
+                <!-- Fitur Salin Caption & Hashtag -->
+                <div class="caption-card">
+                  <div class="caption-header">
+                    <span class="caption-label">📝 Caption & Hashtag:</span>
+                    <button type="button" id="copyAllBtn" class="btn-copy-sm">
+                      📋 Salin Semua
+                    </button>
+                  </div>
+                  <p id="captionText" class="caption-content">-</p>
+                  
+                  <div id="hashtagsContainer" class="hashtags-list" style="display: none;">
+                    <button type="button" id="copyHashtagsBtn" class="btn-pill-copy">
+                      #️⃣ Salin Khusus Hashtag Saja
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Tombol Download Otomatis -->
+                <div class="download-buttons-group">
+                  <div class="btn-title">Pilih Format Unduhan:</div>
+                  
+                  <button type="button" id="btnDlHd" class="btn-download btn-glow-green">
+                    <span class="dl-icon">⚡</span>
+                    <div class="dl-info">
+                      <span class="dl-main">Download Video HD (Tanpa Watermark)</span>
+                      <span class="dl-sub">Kualitas tertinggi, langsung simpan ke penyimpanan HP</span>
+                    </div>
+                  </button>
+
+                  <button type="button" id="btnDlSd" class="btn-download btn-outline">
+                    <span class="dl-icon">🎬</span>
+                    <div class="dl-info">
+                      <span class="dl-main">Download Video Server 2 (Normal)</span>
+                      <span class="dl-sub">Hemat kuota internet</span>
+                    </div>
+                  </button>
+
+                  <button type="button" id="btnDlAudio" class="btn-download btn-music">
+                    <span class="dl-icon">🎵</span>
+                    <div class="dl-info">
+                      <span class="dl-main">Download Audio (MP3)</span>
+                      <span class="dl-sub">Format suara instan</span>
+                    </div>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Slide Foto Galeri TikTok -->
+            <div id="slidePhotosArea" class="slides-section" style="display: none;">
+              <div class="section-title-sm">
+                <span>📸 Foto Slide TikTok (<span id="photoCount">0</span> Foto)</span>
+                <button type="button" id="btnDownloadAllPhotos" class="btn-copy-sm">
+                  ⬇️ Download Semua Foto
+                </button>
+              </div>
+              <div id="photosGrid" class="photos-grid"></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <div id="toastNotification" class="toast" style="display: none;">
+    <span id="toastMessage">Teks berhasil disalin!</span>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tiktokInput = document.getElementById('tiktokUrl');
+      const pasteBtn = document.getElementById('pasteBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const submitBtn = document.getElementById('submitBtn');
+      const btnText = submitBtn.querySelector('.btn-text');
+      const spinner = submitBtn.querySelector('.spinner');
+
+      const errorAlert = document.getElementById('errorAlert');
+      const errorMessage = document.getElementById('errorMessage');
+      const progressAlert = document.getElementById('progressAlert');
+      const progressText = document.getElementById('progressText');
+
+      const resultBox = document.getElementById('resultBox');
+      const authorAvatar = document.getElementById('authorAvatar');
+      const authorNickname = document.getElementById('authorNickname');
+      const authorUsername = document.getElementById('authorUsername');
+      const viewCount = document.getElementById('viewCount');
+      const likeCount = document.getElementById('likeCount');
+      const mediaCover = document.getElementById('mediaCover');
+      const durationBadge = document.getElementById('durationBadge');
+      const captionText = document.getElementById('captionText');
+      const copyAllBtn = document.getElementById('copyAllBtn');
+      const hashtagsContainer = document.getElementById('hashtagsContainer');
+      const copyHashtagsBtn = document.getElementById('copyHashtagsBtn');
+
+      const btnDlHd = document.getElementById('btnDlHd');
+      const btnDlSd = document.getElementById('btnDlSd');
+      const btnDlAudio = document.getElementById('btnDlAudio');
+
+      const slidePhotosArea = document.getElementById('slidePhotosArea');
+      const photosGrid = document.getElementById('photosGrid');
+      const photoCount = document.getElementById('photoCount');
+      const btnDownloadAllPhotos = document.getElementById('btnDownloadAllPhotos');
+
+      const toast = document.getElementById('toastNotification');
+      const toastMessage = document.getElementById('toastMessage');
+
+      let currentData = null;
+
+      tiktokInput.addEventListener('input', () => {
+        clearBtn.style.display = tiktokInput.value.trim() ? 'block' : 'none';
+      });
+
+      clearBtn.addEventListener('click', () => {
+        tiktokInput.value = '';
+        clearBtn.style.display = 'none';
+        tiktokInput.focus();
+      });
+
+      // Tombol Tempel (Paste Clipboard)
+      pasteBtn.addEventListener('click', async () => {
+        try {
+          const text = await navigator.clipboard.readText();
+          if (text) {
+            tiktokInput.value = text.trim();
+            clearBtn.style.display = 'block';
+            showToast('Tautan berhasil ditempel!');
+          }
+        } catch {
+          tiktokInput.focus();
+          showToast('Silakan tempel (paste) manual di kolom input.');
+        }
+      });
+
+      submitBtn.addEventListener('click', handleDownload);
+      tiktokInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleDownload();
+      });
+
+      // 1. Ekstraksi Data dari Server TikTok
+      async function handleDownload() {
+        const rawUrl = tiktokInput.value.trim();
+
+        if (!rawUrl) {
+          showError('Harap tempelkan tautan video TikTok terlebih dahulu!');
+          return;
+        }
+
+        if (!rawUrl.includes('tiktok.com')) {
+          showError('Tautan tidak valid! Pastikan tautan berasal dari TikTok.');
+          return;
+        }
+
+        hideError();
+        setLoading(true);
+
+        try {
+          const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(rawUrl)}&hd=1`;
+          const response = await fetch(apiUrl);
+          const result = await response.json();
+
+          if (result.code !== 0 || !result.data) {
+            throw new Error(result.msg || 'Gagal mengekstrak video. Pastikan video publik & tautan benar!');
+          }
+
+          const data = result.data;
+          const title = data.title || '';
+          const hashtags = (title.match(/#[\w\u0590-\u05ff]+/gi) || []).join(' ');
+
+          currentData = {
+            id: data.id,
+            title: title,
+            hashtags: hashtags,
+            cover: data.cover || data.origin_cover,
+            duration: data.duration,
+            author: {
+              unique_id: data.author?.unique_id || 'creator',
+              nickname: data.author?.nickname || 'TikTok User',
+              avatar: data.author?.avatar
+            },
+            stats: {
+              plays: data.play_count || 0,
+              likes: data.digg_count || 0
+            },
+            video_hd: data.hdplay || data.play,
+            video_sd: data.play,
+            audio: data.music,
+            images: data.images || []
+          };
+
+          renderResult(currentData);
+
+          setTimeout(() => {
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 150);
+
+        } catch (err) {
+          showError(err.message || 'Gagal mengambil video TikTok. Silakan coba lagi.');
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      function renderResult(data) {
+        authorAvatar.src = data.author.avatar || 'https://via.placeholder.com/60';
+        authorNickname.textContent = data.author.nickname;
+        authorUsername.textContent = `@${data.author.unique_id}`;
+
+        viewCount.textContent = `👁️ ${data.stats.plays}`;
+        likeCount.textContent = `❤️ ${data.stats.likes}`;
+
+        mediaCover.src = data.cover || '';
+        durationBadge.textContent = data.duration ? `${data.duration}s` : 'HD';
+        captionText.textContent = data.title || 'Tidak ada deskripsi caption.';
+
+        hashtagsContainer.style.display = (data.hashtags && data.hashtags.length > 0) ? 'block' : 'none';
+
+        if (data.images && data.images.length > 0) {
+          btnDlHd.style.display = 'none';
+          btnDlSd.style.display = 'none';
+          slidePhotosArea.style.display = 'block';
+          photoCount.textContent = data.images.length;
+          renderPhotos(data.images, data.id);
+        } else {
+          btnDlHd.style.display = 'flex';
+          btnDlSd.style.display = 'flex';
+          slidePhotosArea.style.display = 'none';
+        }
+
+        resultBox.style.display = 'block';
+      }
+
+      // 2. SISTEM FORCE DIRECT DOWNLOAD KE PENYIMPANAN HP (BLOB METHOD)
+      // Mengubah media menjadi Blob lokal agar Chrome HP WAJIB menyimpannya sebagai file langsung!
+      async function forceSaveFile(url, filename) {
+        if (!url) {
+          showToast('Link unduhan tidak tersedia');
+          return;
+        }
+
+        progressAlert.style.display = 'flex';
+        progressText.textContent = `Mengunduh ${filename}... File akan langsung masuk ke HP.`;
+
+        try {
+          let res;
+          try {
+            res = await fetch(url);
+          } catch (e) {
+            // Bypass CORS jika dibatasi jaringan
+            res = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
+          }
+
+          if (!res.ok) throw new Error('Gagal mengambil data video');
+
+          const blob = await res.blob();
+          const blobUrl = window.URL.createObjectURL(blob);
+          
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = blobUrl;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+
+          setTimeout(() => {
+            window.URL.revokeObjectURL(blobUrl);
+            document.body.removeChild(a);
+            progressAlert.style.display = 'none';
+            showToast('✅ Berhasil disimpan ke folder Downloads!');
+          }, 1500);
+
+        } catch (err) {
+          progressAlert.style.display = 'none';
+          // Fallback direct click
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          a.target = '_blank';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+      }
+
+      // Tombol Download
+      btnDlHd.addEventListener('click', () => {
+        if (!currentData) return;
+        const filename = `TikSnap_${currentData.id || Date.now()}_HD_NoWatermark.mp4`;
+        forceSaveFile(currentData.video_hd || currentData.video_sd, filename);
+      });
+
+      btnDlSd.addEventListener('click', () => {
+        if (!currentData) return;
+        const filename = `TikSnap_${currentData.id || Date.now()}_SD.mp4`;
+        forceSaveFile(currentData.video_sd || currentData.video_hd, filename);
+      });
+
+      btnDlAudio.addEventListener('click', () => {
+        if (!currentData) return;
+        const filename = `TikSnap_${currentData.id || Date.now()}_Audio.mp3`;
+        forceSaveFile(currentData.audio, filename);
+      });
+
+      // 3. Fitur Salin Caption & Hashtag
+      copyAllBtn.addEventListener('click', () => {
+        if (!currentData || !currentData.title) return;
+        copyText(currentData.title, '✅ Caption & Hashtag berhasil disalin!');
+      });
+
+      copyHashtagsBtn.addEventListener('click', () => {
+        if (!currentData || !currentData.hashtags) return;
+        copyText(currentData.hashtags, '✅ Seluruh Hashtag berhasil disalin!');
+      });
+
+      function renderPhotos(images, videoId) {
+        photosGrid.innerHTML = '';
+        images.forEach((imgUrl, index) => {
+          const card = document.createElement('div');
+          card.className = 'photo-card';
+          card.innerHTML = `
+            <img src="${imgUrl}" alt="Foto ${index + 1}" loading="lazy">
+            <div class="dl-photo-overlay">
+              <button type="button" class="btn-dl-single" data-url="${imgUrl}" data-index="${index + 1}">
+                Unduh #${index + 1}
+              </button>
+            </div>
+          `;
+          photosGrid.appendChild(card);
+        });
+
+        photosGrid.querySelectorAll('.btn-dl-single').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const url = e.target.getAttribute('data-url');
+            const idx = e.target.getAttribute('data-index');
+            forceSaveFile(url, `TikSnap_Foto_${videoId || Date.now()}_${idx}.jpg`);
+          });
+        });
+      }
+
+      btnDownloadAllPhotos.addEventListener('click', () => {
+        if (!currentData || !currentData.images) return;
+        showToast(`Mengunduh ${currentData.images.length} foto...`);
+        currentData.images.forEach((url, i) => {
+          setTimeout(() => {
+            forceSaveFile(url, `TikSnap_Foto_${currentData.id || Date.now()}_${i + 1}.jpg`);
+          }, i * 800);
+        });
+      });
+
+      function copyText(text, msg) {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(() => showToast(msg));
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          showToast(msg);
+        }
+      }
+
+      let toastTimer = null;
+      function showToast(msg) {
+        toastMessage.textContent = msg;
+        toast.style.display = 'block';
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => { toast.style.display = 'none'; }, 2600);
+      }
+
+      function setLoading(isLoading) {
+        submitBtn.disabled = isLoading;
+        btnText.style.display = isLoading ? 'none' : 'inline-block';
+        spinner.style.display = isLoading ? 'inline-block' : 'none';
+      }
+
+      function showError(msg) {
+        errorMessage.textContent = msg;
+        errorAlert.style.display = 'flex';
+      }
+
+      function hideError() {
+        errorAlert.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
